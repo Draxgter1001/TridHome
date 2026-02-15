@@ -1,0 +1,27 @@
+# TridHome Alpha — Backend Dependencies
+# Core
+Django
+djangorestframework
+djangorestframework-simplejwt
+django-cors-headers
+django-filter
+
+# Auth
+google-auth
+google-auth-oauthlib
+
+# Media handling
+Pillow
+
+# Environment
+python-dotenv
+
+# Database (production)
+dj-database-url
+psycopg2-binary
+
+# Server (production)
+gunicorn
+
+# Development
+django-extensions
