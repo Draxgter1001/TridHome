@@ -1,0 +1,44 @@
+# TridHome Alpha — investor prototype
+# Run:  docker compose up --build
+# Open: http://localhost:8080          (site)
+#       http://localhost:8080/admin/   (Django admin — create a superuser, see README)
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: tridhome
+      POSTGRES_USER: tridhome
+      POSTGRES_PASSWORD: tridhome-dev-password
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U tridhome"]
+      interval: 5s
+      retries: 10
+
+  server:
+    build: ./server
+    environment:
+      DJANGO_SECRET_KEY: local-demo-secret-change-me
+      DJANGO_ALLOWED_HOSTS: "localhost,127.0.0.1,server"
+      POSTGRES_DB: tridhome
+      POSTGRES_USER: tridhome
+      POSTGRES_PASSWORD: tridhome-dev-password
+      POSTGRES_HOST: db
+      CORS_ALLOWED_ORIGINS: "http://localhost:8080"
+    depends_on:
+      db:
+        condition: service_healthy
+    volumes:
+      - media:/app/media
+
+  client:
+    build: ./client
+    ports:
+      - "8080:80"
+    depends_on:
+      - server
+
+volumes:
+  pgdata:
+  media:
