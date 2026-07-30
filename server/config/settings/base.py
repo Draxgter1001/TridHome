@@ -108,9 +108,9 @@ GOOGLE_OAUTH_CLIENT_ID = os.environ.get("GOOGLE_OAUTH_CLIENT_ID", "")
 ANTHROPIC_API_KEY = os.environ.get("ANTHROPIC_API_KEY", "")
 GEMINI_API_KEY = os.environ.get("GEMINI_API_KEY", "")
 # auto | gemini | anthropic | fallback
-TRID_AI_PROVIDER = os.environ.get("TRID_AI_PROVIDER", "auto")
+TRID_AI_PROVIDER = os.environ.get("TRID_AI_PROVIDER") or "auto"
 
 _default_model = "gemini-2.5-flash" if GEMINI_API_KEY and not (
     TRID_AI_PROVIDER == "anthropic"
 ) else "claude-haiku-4-5"
-TRID_AI_MODEL = os.environ.get("TRID_AI_MODEL", _default_model)
+TRID_AI_MODEL = os.environ.get("TRID_AI_MODEL") or _default_model

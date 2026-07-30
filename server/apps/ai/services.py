@@ -12,9 +12,12 @@ Every engine answers with REAL listings from the database. Any provider
 error degrades gracefully to the fallback engine, so the demo never breaks.
 """
 import json
+import logging
 import re
 
 import requests
+
+logger = logging.getLogger("trid")
 from django.conf import settings
 
 from apps.listings.models import Listing
@@ -364,8 +367,19 @@ def chat(messages: list) -> dict:
     else:
         try:
             result = engine(messages)
-        except (requests.RequestException, KeyError, IndexError, ValueError):
+        except requests.HTTPError as e:
+            body = e.response.text[:500] if e.response is not None else ""
+            logger.error(
+                "Trid provider '%s' HTTP %s — falling back. Body: %s",
+                provider,
+                e.response.status_code if e.response is not None else "?",
+                body,
+            )
+            result = fallback_chat(messages)
+        except (requests.RequestException, KeyError, IndexError, ValueError) as e:
             # Provider down, rate-limited, or unexpected shape → never break the demo
+            logger.error("Trid provider '%s' failed (%s: %s) — falling back.",
+                         provider, type(e).__name__, e)
             result = fallback_chat(messages)
 
     result["listings"] = ListingListSerializer(result["listings"], many=True).data
