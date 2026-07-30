@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { createListing } from "../../api/listings";
+import { uploadListingImage } from "../../api/verification";
 
 /* Port of legacy PropertyForm: same field set, same step UX (posizione →
    dettagli → annuncio → foto), submitting once to the merged endpoint. */
@@ -19,6 +20,7 @@ export default function PropertyForm({ onCreated }) {
     title: "", description: "",
     image_urls: [""],
   });
+  const [files, setFiles] = useState([]);
 
   const set = (k) => (e) => setForm({ ...form, [k]: e.target.value });
   const input =
@@ -44,6 +46,9 @@ export default function PropertyForm({ onCreated }) {
         image_urls: form.image_urls.filter(Boolean),
       };
       const listing = await createListing(payload);
+      for (const f of files) {
+        try { await uploadListingImage(listing.id, f); } catch { /* skip bad file */ }
+      }
       onCreated(listing);
     } catch (err) {
       const d = err.detail || {};
@@ -126,8 +131,17 @@ export default function PropertyForm({ onCreated }) {
 
       {step === 3 && (
         <div className="space-y-3">
+          <div>
+            <label className={label}>Carica le foto</label>
+            <input type="file" accept="image/*" multiple
+              onChange={(e) => setFiles([...e.target.files])}
+              className="text-sm file:mr-3 file:rounded-full file:border-0 file:bg-brand-mist file:px-4 file:py-2 file:text-sm file:font-medium file:text-brand-dark hover:file:bg-brand-light/50" />
+            {files.length > 0 && (
+              <p className="text-xs text-gray-500 mt-1">{files.length} foto selezionate</p>
+            )}
+          </div>
           <p className="text-sm text-gray-500">
-            Incolla gli URL delle foto (l'upload diretto arriva nella prossima versione).
+            Oppure incolla gli URL di foto già online:
           </p>
           {form.image_urls.map((u, i) => (
             <input key={i} className={input} placeholder="https://…" value={u}

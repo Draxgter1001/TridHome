@@ -2,7 +2,7 @@ from django.contrib.auth.password_validation import validate_password
 from django.db import transaction
 from rest_framework import serializers
 
-from .models import AgencyProfile, PrivateProfile, User
+from .models import AgencyProfile, PrivateProfile, User, VerificationDocument
 
 
 class AgencyProfileSerializer(serializers.ModelSerializer):
@@ -74,3 +74,10 @@ class RegisterSerializer(serializers.ModelSerializer):
         else:
             PrivateProfile.objects.create(user=user)
         return user
+
+
+class VerificationDocumentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = VerificationDocument
+        fields = ["id", "doc_type", "file", "status", "reject_reason", "uploaded_at"]
+        read_only_fields = ["status", "reject_reason", "uploaded_at"]

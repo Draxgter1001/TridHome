@@ -26,6 +26,13 @@ services:
       POSTGRES_PASSWORD: tridhome-dev-password
       POSTGRES_HOST: db
       CORS_ALLOWED_ORIGINS: "http://localhost:8080"
+      # Trid, l'agente AI — metti UNA delle due chiavi in un file .env accanto
+      # a questo compose. GEMINI_API_KEY ha un piano GRATUITO (aistudio.google.com);
+      # senza alcuna chiave Trid usa il motore fallback integrato.
+      GEMINI_API_KEY: ${GEMINI_API_KEY:-}
+      ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY:-}
+      TRID_AI_PROVIDER: ${TRID_AI_PROVIDER:-auto}
+      TRID_AI_MODEL: ${TRID_AI_MODEL:-}
     depends_on:
       db:
         condition: service_healthy

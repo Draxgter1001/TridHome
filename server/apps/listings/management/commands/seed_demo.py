@@ -17,6 +17,7 @@ DEMO_LISTINGS = [
     ("Quadrilocale con doppio balcone Monteverde", "appartamento", "vendita", 610000, 118, 4, "Roma", "Monteverde", "00152"),
     ("Negozio su strada ad alto passaggio", "negozio", "affitto", 3200, 90, 2, "Roma", "Appio Latino", "00183"),
     ("Attico panoramico Parioli", "attico", "vendita", 1250000, 175, 6, "Roma", "Parioli", "00197"),
+    ("Trilocale arredato in affitto a Trastevere", "appartamento", "affitto", 1400, 85, 3, "Roma", "Trastevere", "00153"),
 ]
 
 TYPOLOGY_BY_ROOMS = {1: "monolocale", 2: "bilocale", 3: "trilocale", 4: "quadrilocale"}
@@ -54,7 +55,7 @@ class Command(BaseCommand):
             privates.append(u)
 
         owners = [agency, agency, agency, agency, privates[0], privates[0],
-                  privates[1], privates[1], agency, agency]
+                  privates[1], privates[1], agency, agency, agency]
 
         for owner, row in zip(owners, DEMO_LISTINGS):
             title, category, contract, price, surface, rooms, province, county, cap = row
@@ -80,6 +81,25 @@ class Command(BaseCommand):
                     sort_order=i,
                 )
 
+        # Bookable visit slots on the first listings (next days)
+        from datetime import time, timedelta
+
+        from django.utils import timezone
+
+        from apps.visits.models import AvailabilitySlot
+
+        today = timezone.localdate()
+        for listing in Listing.objects.order_by("id")[:4]:
+            for d in (2, 4):
+                for h in (10, 17):
+                    AvailabilitySlot.objects.get_or_create(
+                        listing=listing,
+                        date=today + timedelta(days=d),
+                        start_time=time(h, 0),
+                        defaults={"end_time": time(h + 1, 0)},
+                    )
+
         self.stdout.write(self.style.SUCCESS(
-            f"Seeded {User.objects.count()} users, {Listing.objects.count()} listings."
+            f"Seeded {User.objects.count()} users, {Listing.objects.count()} listings, "
+            f"{AvailabilitySlot.objects.count()} visit slots."
         ))

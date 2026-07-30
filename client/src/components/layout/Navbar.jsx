@@ -5,7 +5,7 @@ import NotificationBell from "./NotificationBell";
 
 /* Spec layout: logo left (→ landing), main buttons center, favorites + profile right */
 export default function Navbar() {
-  const { user, logout } = useAuth();
+  const { user } = useAuth();
 
   const item =
     "px-4 py-2 rounded-full text-sm font-medium transition-colors hover:bg-brand-mist hover:text-brand-dark";
@@ -31,13 +31,13 @@ export default function Navbar() {
             <FaHeart className="w-5 h-5" />
           </Link>
           {user ? (
-            <button
-              onClick={logout}
+            <Link
+              to="/profilo"
               className="flex items-center gap-2 text-sm font-medium hover:text-brand"
             >
               <FaUserCircle className="w-6 h-6" />
               {user.first_name}
-            </button>
+            </Link>
           ) : (
             <Link
               to="/login"

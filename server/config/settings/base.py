@@ -28,6 +28,7 @@ INSTALLED_APPS = [
     "apps.favorites",
     "apps.notifications",
     "apps.feedback",
+    "apps.ai",
 ]
 
 MIDDLEWARE = [
@@ -102,3 +103,14 @@ SIMPLE_JWT = {
 }
 
 GOOGLE_OAUTH_CLIENT_ID = os.environ.get("GOOGLE_OAUTH_CLIENT_ID", "")
+
+# --- Trid, the AI agent (provider-agnostic) ---
+ANTHROPIC_API_KEY = os.environ.get("ANTHROPIC_API_KEY", "")
+GEMINI_API_KEY = os.environ.get("GEMINI_API_KEY", "")
+# auto | gemini | anthropic | fallback
+TRID_AI_PROVIDER = os.environ.get("TRID_AI_PROVIDER", "auto")
+
+_default_model = "gemini-2.5-flash" if GEMINI_API_KEY and not (
+    TRID_AI_PROVIDER == "anthropic"
+) else "claude-haiku-4-5"
+TRID_AI_MODEL = os.environ.get("TRID_AI_MODEL", _default_model)
