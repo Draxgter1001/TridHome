@@ -44,10 +44,22 @@ npm run dev                          # http://localhost:5173 (proxy /api → :80
       VerificationDocument + approvazione da admin, Listing unificato
       (ex Property+Advert), filtri/ricerca, auth JWT + registrazione con ruolo,
       seed demo, Docker.
-- [ ] **Week 2** — calendario visite (richiesta → conferma → notifica), recensioni ★,
-      preferiti, landing con hero video reale, port completo di PropertyForm.
-- [ ] **Week 3** — dashboard agenzia, pop-up feedback, upload documenti da UI,
-      export feedback, hardening produzione.
+- [x] **Week 2** — calendario visite completo (disponibilità del venditore →
+      richiesta con messaggio → conferma/rifiuto con un click → notifica in-app),
+      recensioni ★ su privati e agenzie con media sul profilo, preferiti
+      (case + agenzie) con pagina dedicata, campanella notifiche, sell flow
+      a 4 passaggi (port di PropertyForm), pagina "Le mie visite".
+- [ ] **Week 3** — dashboard agenzia, pop-up feedback + export, upload documenti
+      di verifica da UI, upload foto reali, hardening produzione.
+
+### Demo flow consigliato per gli investitori (2 minuti)
+
+1. Login come `privato1@tridhome.demo` → cerca casa → cuore su un annuncio →
+   apri l'annuncio → prenota una visita con messaggio.
+2. Logout, login come `agenzia@tridhome.demo` → campanella: nuova richiesta →
+   "Le mie visite" → **Conferma** con un click.
+3. Logout, login di nuovo come privato → campanella: **Visita confermata**.
+   Fine: nessuna telefonata, come da promessa della landing.
 
 ## Note
 

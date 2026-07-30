@@ -1,10 +1,23 @@
-import { FaRegHeart } from "react-icons/fa";
-import { Link } from "react-router-dom";
+import { FaHeart, FaRegHeart } from "react-icons/fa";
+import { Link, useNavigate } from "react-router-dom";
+import { useAuth } from "../../context/AuthContext";
+import { useFavorites } from "../../context/FavoritesContext";
 
 const euro = (n) =>
   new Intl.NumberFormat("it-IT", { style: "currency", currency: "EUR", maximumFractionDigits: 0 }).format(n);
 
 export default function PropertyCard({ listing }) {
+  const { user } = useAuth();
+  const { listingIds, toggle } = useFavorites();
+  const navigate = useNavigate();
+  const favorited = listingIds.has(listing.id);
+
+  const onHeart = (e) => {
+    e.preventDefault();
+    if (!user) return navigate("/login");
+    toggle({ listing: listing.id }).catch(() => {});
+  };
+
   return (
     <Link
       to={`/annunci/${listing.id}`}
@@ -23,11 +36,11 @@ export default function PropertyCard({ listing }) {
           {listing.contract}
         </span>
         <button
-          aria-label="Aggiungi ai preferiti"
-          onClick={(e) => e.preventDefault()}
-          className="absolute top-3 right-3 bg-white/90 p-2 rounded-full text-brand-dark hover:text-red-500"
+          aria-label={favorited ? "Rimuovi dai preferiti" : "Aggiungi ai preferiti"}
+          onClick={onHeart}
+          className="absolute top-3 right-3 bg-white/90 p-2 rounded-full text-brand-dark hover:scale-110 transition-transform"
         >
-          <FaRegHeart />
+          {favorited ? <FaHeart className="text-red-500" /> : <FaRegHeart />}
         </button>
       </div>
       <div className="p-4">

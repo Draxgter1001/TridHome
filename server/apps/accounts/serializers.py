@@ -29,11 +29,22 @@ class UserSerializer(serializers.ModelSerializer):
 class PublicUserSerializer(serializers.ModelSerializer):
     """What other visitors see on a listing / profile page."""
     agency_profile = AgencyProfileSerializer(read_only=True)
+    rating_avg = serializers.SerializerMethodField()
+    rating_count = serializers.SerializerMethodField()
 
     class Meta:
         model = User
         fields = ["id", "first_name", "last_name", "role", "is_verified",
-                  "avatar", "agency_profile", "date_joined"]
+                  "avatar", "agency_profile", "rating_avg", "rating_count",
+                  "date_joined"]
+
+    def get_rating_avg(self, obj):
+        from django.db.models import Avg
+        avg = obj.reviews_received.aggregate(a=Avg("rating"))["a"]
+        return round(avg, 1) if avg else None
+
+    def get_rating_count(self, obj):
+        return obj.reviews_received.count()
 
 
 class RegisterSerializer(serializers.ModelSerializer):

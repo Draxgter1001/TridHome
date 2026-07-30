@@ -1,6 +1,7 @@
 import { FaHeart, FaUserCircle } from "react-icons/fa";
 import { Link, NavLink } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
+import NotificationBell from "./NotificationBell";
 
 /* Spec layout: logo left (→ landing), main buttons center, favorites + profile right */
 export default function Navbar() {
@@ -20,10 +21,12 @@ export default function Navbar() {
           <NavLink to="/cerca" className={item}>Cerca casa</NavLink>
           <NavLink to="/cerca?contract=affitto" className={item}>Affitti</NavLink>
           <NavLink to="/vendi" className={item}>Vendi</NavLink>
+          <NavLink to="/visite" className={item}>Le mie visite</NavLink>
           <NavLink to="/community" className={item}>Community</NavLink>
         </nav>
 
         <div className="flex items-center gap-4 text-brand-dark">
+          <NotificationBell />
           <Link to="/preferiti" aria-label="Preferiti" className="hover:text-brand">
             <FaHeart className="w-5 h-5" />
           </Link>
