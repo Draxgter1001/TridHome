@@ -1,5 +1,7 @@
 import { Route, Routes } from "react-router-dom";
+import TridChat from "./components/ai/TridChat";
 import RequireAuth from "./components/common/RequireAuth";
+import FeedbackModal from "./components/feedback/FeedbackModal";
 import Footer from "./components/layout/Footer";
 import Navbar from "./components/layout/Navbar";
 import FavoritesPage from "./pages/FavoritesPage";
@@ -8,6 +10,7 @@ import ListingPage from "./pages/ListingPage";
 import LoginPage from "./pages/LoginPage";
 import RegisterPage from "./pages/RegisterPage";
 import SearchPage from "./pages/SearchPage";
+import DashboardPage from "./pages/DashboardPage";
 import SellPage from "./pages/SellPage";
 import VisitsPage from "./pages/VisitsPage";
 
@@ -25,9 +28,12 @@ export default function App() {
           <Route path="/vendi" element={<RequireAuth><SellPage /></RequireAuth>} />
           <Route path="/preferiti" element={<RequireAuth><FavoritesPage /></RequireAuth>} />
           <Route path="/visite" element={<RequireAuth><VisitsPage /></RequireAuth>} />
+          <Route path="/profilo" element={<RequireAuth><DashboardPage /></RequireAuth>} />
         </Routes>
       </main>
       <Footer />
+      <TridChat />
+      <FeedbackModal />
     </div>
   );
 }

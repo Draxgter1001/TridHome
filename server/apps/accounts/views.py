@@ -78,3 +78,27 @@ class GoogleLoginView(APIView):
             from .models import PrivateProfile
             PrivateProfile.objects.create(user=user)
         return Response({"user": UserSerializer(user).data, **_tokens_for(user)})
+
+
+from rest_framework import mixins, parsers, viewsets
+
+from .models import VerificationDocument
+from .serializers import VerificationDocumentSerializer
+
+
+class VerificationDocumentViewSet(
+    mixins.CreateModelMixin, mixins.ListModelMixin, viewsets.GenericViewSet
+):
+    permission_classes = [permissions.IsAuthenticated]
+    serializer_class = VerificationDocumentSerializer
+    parser_classes = [parsers.MultiPartParser, parsers.FormParser]
+
+    def get_queryset(self):
+        return self.request.user.verification_documents.all()
+
+    def perform_create(self, serializer):
+        f = self.request.FILES.get("file")
+        if f and f.size > 10 * 1024 * 1024:
+            from rest_framework.exceptions import ValidationError
+            raise ValidationError("Il file non può superare i 10 MB.")
+        serializer.save(user=self.request.user)
