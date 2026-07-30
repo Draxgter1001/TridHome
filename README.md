@@ -69,8 +69,12 @@ alla chiave presente; puoi forzare con `gemini` / `anthropic` / `fallback`):
    ```
    GEMINI_API_KEY=AIza...
    ```
-   e rilancia `docker compose up`. Modello di default `gemini-2.5-flash`
-   (piano gratuito). Trid usa il function calling di Gemini: il modello decide
+   e rilancia `docker compose up`. Modello di default `gemini-3.5-flash`
+   (piano gratuito). Google ritira i modelli Gemini di frequente: se ricevi un
+   404 sul modello, scopri quelli disponibili per la tua chiave con
+   `docker compose exec server python manage.py trid_test --list-models`
+   e imposta `TRID_AI_MODEL=<nome>` nel `.env`. Trid usa il function calling
+   di Gemini: il modello decide
    quando chiamare `search_listings`, che interroga il DB vero. Nota: il piano
    gratuito ha limiti di richieste al minuto — più che sufficienti per una
    presentazione dal vivo.
